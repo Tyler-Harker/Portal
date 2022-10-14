@@ -1,44 +1,28 @@
+using Orleans.TestKit;
+using Portal.Common.ValueObjects.Organizations;
+using Portal.GrainInterfaces;
+
 namespace Portal.Grains.Specs.StepDefinitions
 {
     [Binding]
-    public sealed class OrganizationGrainDefinitions
+    public class OrganizationGrainDefinitions
     {
-        // For additional details on SpecFlow step definitions see https://go.specflow.org/doc-stepdef
-
-        [Given("the first number is (.*)")]
-        public void GivenTheFirstNumberIs(int number)
+        private readonly TestKitSilo Silo;
+        public OrganizationGrainDefinitions()
         {
-            //TODO: implement arrange (precondition) logic
-            // For storing and retrieving scenario-specific data see https://go.specflow.org/doc-sharingdata
-            // To use the multiline text or the table argument of the scenario,
-            // additional string/Table parameters can be defined on the step definition
-            // method. 
-
-            throw new PendingStepException();
+            Silo = new TestKitSilo();
         }
 
-        [Given("the second number is (.*)")]
-        public void GivenTheSecondNumberIs(int number)
+        [Given("OrganizationGrain with id: (.*) has not been initialized")]
+        public async Task GivenOrganizationGrainHasNotBeenInitialized(string id)
         {
-            //TODO: implement arrange (precondition) logic
-
-            throw new PendingStepException();
+            await Silo.CreateGrainAsync<OrganizationGrain>(id);
         }
 
-        [When("the two numbers are added")]
-        public void WhenTheTwoNumbersAreAdded()
+        [When("OrganizationGrain with id: (.*) GetUsers with Skip: (.*) Take: (.*) is called")]
+        public async Task WhenOrganizationGranGetUsersIsCalled(string organizationId, int skip, int take)
         {
-            //TODO: implement act (action) logic
-
-            throw new PendingStepException();
-        }
-
-        [Then("the result should be (.*)")]
-        public void ThenTheResultShouldBe(int result)
-        {
-            //TODO: implement assert (verification) logic
-
-            throw new PendingStepException();
+            var result = await Silo.GrainFactory.GetGrain(new OrganizationId(organizationId)).GetUsers(new Common.ValueObjects.SkipTake(skip, take));
         }
     }
 }

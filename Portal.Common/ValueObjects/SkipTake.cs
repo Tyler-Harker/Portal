@@ -8,9 +8,9 @@ namespace Portal.Common.ValueObjects
 {
     public class SkipTake : BaseValueObject
     {
-        public uint Skip { get; protected set; }
-        public uint Take { get; protected set; }
-        public SkipTake(uint skip = 0, uint take = 10) 
+        public int Skip { get; protected set; }
+        public int Take { get; protected set; }
+        public SkipTake(int skip = 0, int take = 10) 
         {
             Skip = skip;
             Take = take;

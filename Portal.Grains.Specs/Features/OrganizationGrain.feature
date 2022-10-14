@@ -1,13 +1,8 @@
-﻿Feature: Calculator
-![Calculator](https://specflow.org/wp-content/uploads/2020/09/calculator.png)
-Simple calculator for adding **two** numbers
+﻿Feature: OrganizationGrain
 
-Link to a feature: [Calculator](Portal.Grains.Specs/Features/Calculator.feature)
-***Further read***: **[Learn more about how to generate Living Documentation](https://docs.specflow.org/projects/specflow-livingdoc/en/latest/LivingDocGenerator/Generating-Documentation.html)**
+@ExpectException
+Scenario: GetUserIdsThrowsExceptionWhenNotInitialized
+	Given OrganizationGrain with id: test has not been initialized
+	When OrganizationGrain with id: test GetUsers with Skip: 0 Take: 10 is called
+	Then there is an exception of type: GrainNotInitializedException
 
-@mytag
-Scenario: Add two numbers
-	Given the first number is 50
-	And the second number is 70
-	When the two numbers are added
-	Then the result should be 120

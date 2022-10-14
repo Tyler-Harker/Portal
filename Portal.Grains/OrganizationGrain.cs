@@ -2,6 +2,7 @@
 using Orleans.EventSourcing;
 using Orleans.Providers;
 using Orleans.Runtime;
+using Portal.Common.Events.OrganizationEvents;
 using Portal.Common.GrainStates;
 using Portal.Common.ValueObjects;
 using Portal.Common.ValueObjects.Organizations;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Grains
 {
-    public class OrganizationGrain : JournaledGrain<OrganizationState>, IOrganizationGrain
+    public class OrganizationGrain : BaseJournaledGrain<OrganizationState, OrganizationId>, IOrganizationGrain
     {
         private readonly ILogger _logger;
         public OrganizationGrain(ILogger<OrganizationGrain> logger)
@@ -23,20 +24,31 @@ namespace Portal.Grains
             _logger = logger;
         }
 
-        public Task Create(OrganizationName name)
-        {
-            throw new NotImplementedException();
-        }
+        protected override OrganizationId GrainId => new OrganizationId(this.IdentityString);
 
-        public Task<IUserGrain> CreateUser()
+        public async Task Create(OrganizationName name) => await ExecuteAsync(async () =>
         {
-            GrainFactory.GetGrain(new UserId(Guid.NewGuid()));
-            throw new NotImplementedException();
-        }
+            RaiseEvent(new InitializeEvent(GrainId, name));
+        }, isInitialization: true);
 
-        public Task<List<IUserGrain>> GetUsers(SkipTake skipTake)
+        public async Task<IUserGrain> CreateUser() => await ExecuteAsync<IUserGrain>(() =>
         {
-            throw new NotImplementedException();
+            //GrainFactory.GetGrain(new UserId(Guid.NewGuid())).
+            return null;
+        });
+
+        public async Task<List<IUserGrain>> GetUsers(SkipTake skipTake) => await ExecuteAsync<List<IUserGrain>>(async () =>
+        {
+            return State.ActiveUserIds
+                .Skip(skipTake.Skip)
+                .Take(skipTake.Take)
+                .Select(uId => GrainFactory.GetGrain(uId)).ToList();
+        });
+
+        public override Task OnActivateAsync()
+        {
+            return base.OnActivateAsync();
+            //State.Id = GrainId;
         }
     }
 }
