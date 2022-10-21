@@ -1,4 +1,5 @@
 ﻿using Portal.Domain.ValueObjects;
+using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Portal.Domain.Events
     public interface IEvent
     {
         UtcDateTime Time { get; }
-        ValueObjects.Users.Id LoggedInUserId { get; }
-        ValueObjects.Users.Id ImpersonatorUserId { get; }
+        UserId? LoggedInUserId { get; }
+        UserId? ImpersonatorUserId { get; }
     }
 }

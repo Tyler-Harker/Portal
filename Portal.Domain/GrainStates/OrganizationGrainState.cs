@@ -1,5 +1,7 @@
 ﻿using Portal.Domain.Events.Organizations;
 using Portal.Domain.Exceptions.Organizations;
+using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,9 @@ namespace Portal.Domain.GrainStates
 {
     public class OrganizationGrainState : BaseState<IOrganizationEvent>
     {
-        public ValueObjects.Organizations.Name? Name { get; private set; }
-        public HashSet<ValueObjects.Users.Id> ActiveUserIds { get; private set; } = new HashSet<ValueObjects.Users.Id>();
-        public HashSet<ValueObjects.Users.Id> DeactivatedUserIds { get; private set; } = new HashSet<ValueObjects.Users.Id>();
+        public OrganizationName? Name { get; private set; }
+        public HashSet<UserId> ActiveUserIds { get; private set; } = new HashSet<UserId>();
+        public HashSet<UserId> DeactivatedUserIds { get; private set; } = new HashSet<UserId>();
         public HashSet<ValueObjects.CustomDomains.Domain> CustomDomains { get; private set; } = new HashSet<ValueObjects.CustomDomains.Domain>();
 
         public void Apply(SetNameEvent @event) => Apply(@event, () =>

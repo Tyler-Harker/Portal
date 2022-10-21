@@ -14,6 +14,14 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
+    <PackageReference Include="OrleansTestKit" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portal.Domain\Portal.Domain.csproj" />
+    <ProjectReference Include="..\Portal.Grains.Interfaces.Internal\Portal.Grains.Interfaces.Internal.csproj" />
+    <ProjectReference Include="..\Portal.Grains.Interfaces.Public\Portal.Grains.Interfaces.Public.csproj" />
+    <ProjectReference Include="..\Portal.Grains\Portal.Grains.csproj" />
   </ItemGroup>
 
 </Project>

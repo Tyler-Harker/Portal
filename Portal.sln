@@ -13,19 +13,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Grains", "Portal.Gra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Common", "Portal.Common\Portal.Common.csproj", "{FA85381E-58DD-4ECB-9449-148BFBA65C39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Orleans.EventSourcing", "Portal.Orleans.EventSourcing\Portal.Orleans.EventSourcing.csproj", "{F247B89A-C5E8-4940-B632-CA665FD6FE79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Orleans.EventSourcing", "Portal.Orleans.EventSourcing\Portal.Orleans.EventSourcing.csproj", "{F247B89A-C5E8-4940-B632-CA665FD6FE79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Orleans.Common", "Portal.Orleans.Common\Portal.Orleans.Common.csproj", "{D4787F53-A9EF-445C-A1C4-C1D7DBC00080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Orleans.Common", "Portal.Orleans.Common\Portal.Orleans.Common.csproj", "{D4787F53-A9EF-445C-A1C4-C1D7DBC00080}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.IdentityServer", "Portal.IdentityServer\Portal.IdentityServer.csproj", "{57274927-4518-4B32-94ED-008D18FA2173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.IdentityServer", "Portal.IdentityServer\Portal.IdentityServer.csproj", "{57274927-4518-4B32-94ED-008D18FA2173}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Grains.Interfaces.Public", "Portal.Grains.Interfaces.Public\Portal.Grains.Interfaces.Public.csproj", "{E82897C1-36A3-4224-A22F-E34004EE21ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Grains.Interfaces.Public", "Portal.Grains.Interfaces.Public\Portal.Grains.Interfaces.Public.csproj", "{E82897C1-36A3-4224-A22F-E34004EE21ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Grains.Interfaces.Internal", "Portal.Grains.Interfaces.Internal\Portal.Grains.Interfaces.Internal.csproj", "{39D01D70-B0E8-42C7-A4E3-D3B034EA5C9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Grains.Interfaces.Internal", "Portal.Grains.Interfaces.Internal\Portal.Grains.Interfaces.Internal.csproj", "{39D01D70-B0E8-42C7-A4E3-D3B034EA5C9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Domain", "Portal.Domain\Portal.Domain.csproj", "{8FF39ED6-A28A-447D-82B9-496871B3F8B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Domain", "Portal.Domain\Portal.Domain.csproj", "{8FF39ED6-A28A-447D-82B9-496871B3F8B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Domain.UnitTests", "Portal.Domain.UnitTests\Portal.Domain.UnitTests.csproj", "{6F3509C0-4557-4CE2-8536-4FA2493040B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Domain.UnitTests", "Portal.Domain.UnitTests\Portal.Domain.UnitTests.csproj", "{6F3509C0-4557-4CE2-8536-4FA2493040B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Grains.UnitTests", "Portal.Grains.UnitTests\Portal.Grains.UnitTests.csproj", "{3053915D-23CF-4072-A97E-8E4E20DA5D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{6F3509C0-4557-4CE2-8536-4FA2493040B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F3509C0-4557-4CE2-8536-4FA2493040B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F3509C0-4557-4CE2-8536-4FA2493040B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3053915D-23CF-4072-A97E-8E4E20DA5D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3053915D-23CF-4072-A97E-8E4E20DA5D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3053915D-23CF-4072-A97E-8E4E20DA5D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3053915D-23CF-4072-A97E-8E4E20DA5D64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

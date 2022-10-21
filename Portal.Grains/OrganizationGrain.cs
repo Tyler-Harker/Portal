@@ -3,23 +3,24 @@ using Orleans;
 using Orleans.EventSourcing;
 using Orleans.Providers;
 using Orleans.Runtime;
-using Portal.Common.Events.OrganizationEvents;
-using Portal.Common.GrainStates;
-using Portal.Common.ValueObjects.Organizations;
-using Portal.Common.ValueObjects.Users;
 using Portal.Domain.GrainStates;
 using Portal.Domain.ValueObjects;
-using Portal.Grains.Interfaces.Internal;
+using Portal.Domain.ValueObjects.Users;
+using Portal.Grains.Interfaces.Public;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Portal.Grains.Interfaces.Internal.Extensions;
+using Portal.Grains.Interfaces.Public.Extensions;
+using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.Events.Organizations;
 
 namespace Portal.Grains
 {
-    public class OrganizationGrain : Grain<OrganizationGrainState>, IOrganizationGrain
+    public class OrganizationGrain : Grain<OrganizationGrainState>, Interfaces.Internal.IOrganizationGrain
     {
         private readonly ILogger _logger;
         public OrganizationGrain(ILogger<OrganizationGrain> logger)
@@ -27,20 +28,61 @@ namespace Portal.Grains
             _logger = logger;
         }
 
-        public Task<Page<Domain.ValueObjects.Users.Id>> GetActiveUsers(SkipTake skipTake)
+        public Task<Interfaces.Internal.IOrganizationGrain> Create(OrganizationId id, OrganizationName name)
         {
-            return State.ActiveUserIds.
+            State.Apply(new CreateEvent(id, name));
             throw new NotImplementedException();
         }
 
-        public Task<Page<Domain.ValueObjects.CustomDomains.Domain>> GetCustomDomains(SkipTake skipTake)
+        public async Task<IUserGrain> CreateUser(Username username, FirstName firstName, LastName lastName)
         {
-            throw new NotImplementedException();
+            var newUserId = new UserId(Guid.NewGuid());
+            var userGrain = GrainFactory.GetInternalGrain(newUserId);
+            
+            await userGrain.Create(newUserId, username, firstName, lastName);
+            State.Apply(new CreateUserEvent(newUserId));
+            return userGrain;
         }
 
-        public Task<Page<Domain.ValueObjects.Users.Id>> GetDeactivatedUsers(SkipTake skipTake)
+        public Task<Page<IUserGrain>> GetActiveUsers(SkipTake skipTake)
         {
-            throw new NotImplementedException();
+            var activeUsers = State.ActiveUserIds
+                .Skip(skipTake.Skip)
+                .Take(skipTake.Take)
+                .Select(x => GrainFactory.GetGrain(x))
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult(new Page<IUserGrain>(skipTake, activeUsers, State.ActiveUserIds.Count));
+        }
+
+        public Task<Page<ICustomDomainGrain>> GetCustomDomains(SkipTake skipTake)
+        {
+            var domains = State.CustomDomains
+                .Skip(skipTake.Skip)
+                .Take(skipTake.Take)
+                .Select(x => GrainFactory.GetGrain(x))
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult(new Page<ICustomDomainGrain>(skipTake, domains, State.CustomDomains.Count));
+        }
+
+        public Task<Page<IUserGrain>> GetDeactivatedUsers(SkipTake skipTake)
+        {
+            var deactivatedUsers = State.ActiveUserIds
+                .Skip(skipTake.Skip)
+                .Take(skipTake.Take)
+                .Select(x => GrainFactory.GetGrain(x))
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult(new Page<IUserGrain>(skipTake, deactivatedUsers, State.DeactivatedUserIds.Count));
+        }
+
+        public Task<bool> IsUserActive(UserId userId)
+        {
+            return Task.FromResult(State.ActiveUserIds.Contains(userId));
         }
     }
 }

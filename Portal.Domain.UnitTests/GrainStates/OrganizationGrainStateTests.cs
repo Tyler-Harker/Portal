@@ -4,6 +4,8 @@ using Portal.Domain.Exceptions;
 using Portal.Domain.Exceptions.Organizations;
 using Portal.Domain.Extensions;
 using Portal.Domain.GrainStates;
+using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +24,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         public void SetName_SetsNameAsExpected()
         {
             //setup
-            var organizationName = new ValueObjects.Organizations.Name("test");
+            var organizationName = new OrganizationName("test");
             var state = new OrganizationGrainState();
 
             //test
@@ -35,7 +37,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             SetEmptyPrincipal();
-            var organizationName = new ValueObjects.Organizations.Name("test");
+            var organizationName = new OrganizationName("test");
             var state = new OrganizationGrainState();
 
             //test
@@ -47,7 +49,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
 
             //test
             state.Apply(new CreateUserEvent(userId));
@@ -58,7 +60,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
 
             //test
             state.Apply(new CreateUserEvent(userId));
@@ -69,7 +71,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
             state.Apply(new CreateUserEvent(userId));
 
             //test
@@ -80,7 +82,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
             state.Apply(new CreateUserEvent(userId));
             state.Apply(new DeactivateUserEvent(userId));
 
@@ -92,14 +94,14 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             SetEmptyPrincipal();
             var state = new OrganizationGrainState();
-            Assert.Throws<UserIdIsNotSetInRequestContextException>(() => state.Apply(new CreateUserEvent(new ValueObjects.Users.Id(Guid.NewGuid()))));
+            Assert.Throws<UserIdIsNotSetInRequestContextException>(() => state.Apply(new CreateUserEvent(new UserId(Guid.NewGuid()))));
         }
         [Test]
         public void DeactivateUserEvent_UserIdGetsAddedToDeactivatedUserIdsList()
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
             state.Apply(new CreateUserEvent(userId));
             state.Apply(new DeactivateUserEvent(userId));
 
@@ -111,7 +113,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             //setup
             var state = new OrganizationGrainState();
-            var userId = new ValueObjects.Users.Id(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
             state.Apply(new CreateUserEvent(userId));
             state.Apply(new DeactivateUserEvent(userId));
 
@@ -123,7 +125,7 @@ namespace Portal.Domain.UnitTests.GrainStates
         {
             SetEmptyPrincipal();
             var state = new OrganizationGrainState();
-            Assert.Throws<UserIdIsNotSetInRequestContextException>(() => state.Apply(new DeactivateUserEvent(new ValueObjects.Users.Id(Guid.NewGuid()))));
+            Assert.Throws<UserIdIsNotSetInRequestContextException>(() => state.Apply(new DeactivateUserEvent(new UserId(Guid.NewGuid()))));
         }
         [Test]
         public void AddCustomDomainEvent_ThrowsExceptionUserIdNotSetInContext()

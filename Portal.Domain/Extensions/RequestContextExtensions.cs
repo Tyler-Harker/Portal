@@ -1,5 +1,6 @@
 ﻿using Orleans.Runtime;
 using Portal.Domain.Constants;
+using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Portal.Domain.Extensions
             return (ClaimsPrincipal?)contextResult;
         }
         public static Claim? GetClaim(string claimType) => GetPrincipal()?.Claims.Where(c => c.Type == claimType).FirstOrDefault();
-        public static ValueObjects.Users.Id? GetLoggedInUserId() => GetClaim(CustomClaimTypes.UserId) is null ? null : new ValueObjects.Users.Id(Guid.Parse(GetClaim(CustomClaimTypes.UserId).Value));
-        public static ValueObjects.Users.Id? GetLoggedInImpersonatorUserId() => GetClaim(CustomClaimTypes.ImpersonatorId) is null ? null : new ValueObjects.Users.Id(Guid.Parse(GetClaim(CustomClaimTypes.ImpersonatorId).Value));
+        public static UserId? GetLoggedInUserId() => GetClaim(CustomClaimTypes.UserId) is null ? null : new UserId(Guid.Parse(GetClaim(CustomClaimTypes.UserId).Value));
+        public static UserId? GetLoggedInImpersonatorUserId() => GetClaim(CustomClaimTypes.ImpersonatorId) is null ? null : new UserId(Guid.Parse(GetClaim(CustomClaimTypes.ImpersonatorId).Value));
     }
 }

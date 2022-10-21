@@ -1,5 +1,6 @@
 ﻿using Portal.Domain.Constants;
 using Portal.Domain.Extensions;
+using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,13 @@ namespace Portal.Domain.UnitTests.GrainStates
 {
     public abstract class BaseStateTest
     {
-        protected ValueObjects.Users.Id _loggedInUserId;
+        protected UserId _loggedInUserId;
         protected ClaimsPrincipal _principal;
 
         [SetUp]
         public void SetUp()
         {
-            _loggedInUserId = new ValueObjects.Users.Id(Guid.NewGuid());
+            _loggedInUserId = new UserId(Guid.NewGuid());
             _principal = new ClaimsPrincipal();
             _principal.AddIdentity(new ClaimsIdentity(new List<Claim>
             {

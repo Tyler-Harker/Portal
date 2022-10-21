@@ -1,13 +1,13 @@
-﻿using Portal.Grains.Interfaces.Internal.User;
+﻿using Orleans;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.Grains.User
+namespace Portal.Grains.Interfaces.Public
 {
-    public class UserGrain : IUserGrain
+    public interface IUserGrain : IGrainWithGuidKey
     {
     }
 }
