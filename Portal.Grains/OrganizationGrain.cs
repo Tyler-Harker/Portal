@@ -1,22 +1,25 @@
 ﻿using Microsoft.Extensions.Logging;
+using Orleans;
 using Orleans.EventSourcing;
 using Orleans.Providers;
 using Orleans.Runtime;
 using Portal.Common.Events.OrganizationEvents;
 using Portal.Common.GrainStates;
-using Portal.Common.ValueObjects;
 using Portal.Common.ValueObjects.Organizations;
 using Portal.Common.ValueObjects.Users;
-using Portal.GrainInterfaces;
+using Portal.Domain.GrainStates;
+using Portal.Domain.ValueObjects;
+using Portal.Grains.Interfaces.Internal;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Portal.Grains
 {
-    public class OrganizationGrain : BaseGrain<OrganizationState, OrganizationId>, IOrganizationGrain
+    public class OrganizationGrain : Grain<OrganizationGrainState>, IOrganizationGrain
     {
         private readonly ILogger _logger;
         public OrganizationGrain(ILogger<OrganizationGrain> logger)
@@ -24,25 +27,20 @@ namespace Portal.Grains
             _logger = logger;
         }
 
-        protected override OrganizationId GrainId => new OrganizationId(this.IdentityString);
-
-        public async Task Initialize(OrganizationName name) => await ExecuteAsync(async () =>
+        public Task<Page<Domain.ValueObjects.Users.Id>> GetActiveUsers(SkipTake skipTake)
         {
-            State.Apply(new InitializeEvent(GrainId, name));
-        }, isInitialization: true);
+            return State.ActiveUserIds.
+            throw new NotImplementedException();
+        }
 
-        public async Task<IUserGrain> CreateUser() => await ExecuteAsync<IUserGrain>(async () =>
+        public Task<Page<Domain.ValueObjects.CustomDomains.Domain>> GetCustomDomains(SkipTake skipTake)
         {
-            var userGrain = GrainFactory.GetGrain(new UserId(Guid.NewGuid()));
-            return null;
-        });
+            throw new NotImplementedException();
+        }
 
-        public async Task<List<IUserGrain>> GetUsers(SkipTake skipTake) => await ExecuteAsync<List<IUserGrain>>(async () =>
+        public Task<Page<Domain.ValueObjects.Users.Id>> GetDeactivatedUsers(SkipTake skipTake)
         {
-            return State.ActiveUserIds
-                .Skip(skipTake.Skip)
-                .Take(skipTake.Take)
-                .Select(uId => GrainFactory.GetGrain(uId)).ToList();
-        });
+            throw new NotImplementedException();
+        }
     }
 }

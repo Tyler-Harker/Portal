@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.ValueObjects.Organizations
 {
-    public record Id(string Value) : ISingleValueObject<string> { }
+    public record UserId(Guid Value) : ISingleValueObject<Guid> { }
+    public record ShortName(string Value) : ISingleValueObject<string> { }
     public record Name(string Value) : ISingleValueObject<string> { }
 }

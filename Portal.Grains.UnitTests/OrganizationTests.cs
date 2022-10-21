@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.Grains.Interfaces.Public.Organization
+namespace Portal.Grains.UnitTests
 {
-    public interface IOrganizationCustomDomainsGrain
+    [TestFixture]
+    public class OrganizationTests : BaseTest
     {
+
     }
 }

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Portal.Domain\Portal.Domain.csproj" />
     <ProjectReference Include="..\Portal.Grains.Interfaces.Public\Portal.Grains.Interfaces.Public.csproj" />
   </ItemGroup>
 
