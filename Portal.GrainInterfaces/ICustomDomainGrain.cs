@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Portal.GrainInterfaces
 {
-    public interface ICustomDomainGrain : IGrainWithStringKey
+    public interface ICustomDomainGrain : IGrainWithStringKey, IBaseGrain
     {
     }
 }

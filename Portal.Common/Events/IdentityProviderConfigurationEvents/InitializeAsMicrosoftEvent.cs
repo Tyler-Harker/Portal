@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Common.Events.IdentityProviderConfigurationEvents
 {
-    public class InitializeAsMicrosoftEvent : IIdentityProviderConfigurationEvent
+    public class InitializeAsMicrosoftEvent : BaseIdentityProviderConfigurationEvent
     {
         public TenantId TenantId { get; protected set; }
         public Authority Authority { get; protected set; }

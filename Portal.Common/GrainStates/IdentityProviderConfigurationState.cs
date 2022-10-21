@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Common.GrainStates
 {
-    public class IdentityProviderConfigurationState : BaseState<Guid>
+    public class IdentityProviderConfigurationState : BaseState<IdentityProviderConfigurationId>
     {
         public IdentityProviderType Type { get; protected set; }
         public TenantId TenantId { get; protected set; }

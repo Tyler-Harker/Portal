@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Portal.Common.Events.OrganizationEvents
 {
-    public class SetIdentityProviderConfigurationIdEvent : IOrganizationEvent
+    public class SetIdentityProviderConfigurationIdEvent : BaseOrganizationEvent
     {
-        public SetIdentityProviderConfigurationIdEvent(IdentityProviderConfigurationId configuration)
+        public SetIdentityProviderConfigurationIdEvent(IdentityProviderConfigurationId configuration) : base()
         {
             Configuration = configuration;
         }

@@ -19,6 +19,10 @@
     <Folder Include="Drivers\" />
     <Folder Include="Features\ValueObjects\" />
     <Folder Include="Support\" />
+    <Folder Include="UnitTests\Events\BaseEvents\" />
+    <Folder Include="UnitTests\Events\IdentityProviderConfigurationEvents\" />
+    <Folder Include="UnitTests\Events\UserEvents\" />
+    <Folder Include="UnitTests\Events\OrganizationEvents\" />
   </ItemGroup>
 
   <ItemGroup>

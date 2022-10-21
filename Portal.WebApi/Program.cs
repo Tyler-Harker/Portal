@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Orleans;
 using Orleans.Configuration;
+using System.Security.Principal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddSingleton(new Lazy<IClusterClient>(() =>
         options.ServiceId = "portal";
     })
     .ConfigureLogging(logging => logging.AddConsole())
+    //.AddOutgoingGrainCallFilter()
     .Build();
     client.Connect(eh => Task.FromResult(true)).Wait();
     return client;

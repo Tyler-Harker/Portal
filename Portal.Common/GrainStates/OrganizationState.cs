@@ -1,4 +1,5 @@
-﻿using Portal.Common.Events.OrganizationEvents;
+﻿using Portal.Common.Events.BaseGrainEvents;
+using Portal.Common.Events.OrganizationEvents;
 using Portal.Common.Exceptions.OrganizationExceptions;
 using Portal.Common.ValueObjects.IdentityProviderConfigurations;
 using Portal.Common.ValueObjects.Organizations;
@@ -22,11 +23,7 @@ namespace Portal.Common.GrainStates
 
         public void Apply(InitializeEvent @event)
         {
-            if(Id != null)
-            {
-                throw new OrganizationAlreadyInitializedException(Id);
-            }
-            Id = @event.Id;
+            Apply(new InitializeStateEvent<OrganizationId>(@event.Id));
             Name = @event.Name;
         }
 

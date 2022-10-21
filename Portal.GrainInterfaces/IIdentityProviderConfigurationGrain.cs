@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Portal.GrainInterfaces
 {
-    public interface IIdentityProviderConfigurationGrain : IGrainWithGuidKey
+    public interface IIdentityProviderConfigurationGrain : IGrainWithGuidKey, IBaseGrain
     {
     }
 }

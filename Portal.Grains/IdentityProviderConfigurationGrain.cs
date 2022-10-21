@@ -1,5 +1,6 @@
 ﻿using Orleans.EventSourcing;
 using Portal.Common.GrainStates;
+using Portal.Common.ValueObjects.IdentityProviderConfigurations;
 using Portal.GrainInterfaces;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Portal.Grains
 {
-    public class IdentityProviderConfigurationGrain : JournaledGrain<IdentityProviderConfigurationState>, IIdentityProviderConfigurationGrain
+    public class IdentityProviderConfigurationGrain : BaseGrain<IdentityProviderConfigurationState, IdentityProviderConfigurationId>, IIdentityProviderConfigurationGrain
     {
         public IdentityProviderConfigurationGrain()
         {
         }
+
+        protected override IdentityProviderConfigurationId GrainId => throw new NotImplementedException();
     }
 }

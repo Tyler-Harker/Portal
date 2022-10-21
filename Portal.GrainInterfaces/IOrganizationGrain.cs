@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Portal.GrainInterfaces
 {
-    public interface IOrganizationGrain : IGrainWithStringKey
+    public interface IOrganizationGrain : IGrainWithStringKey, IBaseGrain
     {
-        Task Create(OrganizationName name);
+        Task Initialize(OrganizationName name);
         Task<IUserGrain> CreateUser();
         Task<List<IUserGrain>> GetUsers(SkipTake skipTake);
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Portal.GrainInterfaces
 {
-    public interface IUserGrain : IGrainWithGuidKey
+    public interface IUserGrain : IGrainWithGuidKey, IBaseGrain
     {
         Task<IOrganizationGrain> GetOrganizationGrainAsync();
     }

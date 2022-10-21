@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Portal.Common.Events.OrganizationEvents
 {
-    public class AddUserEvent : IOrganizationEvent
+    public class AddUserEvent : BaseOrganizationEvent
     {
         public UserId UserId { get; protected set; }
 
-        public AddUserEvent(UserId userId)
+        public AddUserEvent(UserId userId) : base()
         {
             if(userId == null) throw new ArgumentNullException(nameof(userId));
             UserId = userId;

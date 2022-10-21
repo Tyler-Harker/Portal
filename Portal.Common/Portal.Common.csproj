@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Attributes\Grains\" />
     <Folder Include="Events\UserEvents\" />
+    <Folder Include="Interceptors\Grains\" />
+    <Folder Include="Interceptors\Silos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.6.5" />
   </ItemGroup>
 
 </Project>

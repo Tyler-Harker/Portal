@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Grains
 {
-    public class OrganizationGrain : BaseJournaledGrain<OrganizationState, OrganizationId>, IOrganizationGrain
+    public class OrganizationGrain : BaseGrain<OrganizationState, OrganizationId>, IOrganizationGrain
     {
         private readonly ILogger _logger;
         public OrganizationGrain(ILogger<OrganizationGrain> logger)
@@ -26,14 +26,14 @@ namespace Portal.Grains
 
         protected override OrganizationId GrainId => new OrganizationId(this.IdentityString);
 
-        public async Task Create(OrganizationName name) => await ExecuteAsync(async () =>
+        public async Task Initialize(OrganizationName name) => await ExecuteAsync(async () =>
         {
-            RaiseEvent(new InitializeEvent(GrainId, name));
+            State.Apply(new InitializeEvent(GrainId, name));
         }, isInitialization: true);
 
-        public async Task<IUserGrain> CreateUser() => await ExecuteAsync<IUserGrain>(() =>
+        public async Task<IUserGrain> CreateUser() => await ExecuteAsync<IUserGrain>(async () =>
         {
-            //GrainFactory.GetGrain(new UserId(Guid.NewGuid())).
+            var userGrain = GrainFactory.GetGrain(new UserId(Guid.NewGuid()));
             return null;
         });
 
@@ -44,11 +44,5 @@ namespace Portal.Grains
                 .Take(skipTake.Take)
                 .Select(uId => GrainFactory.GetGrain(uId)).ToList();
         });
-
-        public override Task OnActivateAsync()
-        {
-            return base.OnActivateAsync();
-            //State.Id = GrainId;
-        }
     }
 }
