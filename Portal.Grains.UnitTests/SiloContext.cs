@@ -45,13 +45,13 @@ namespace Portal.Grains.UnitTests
             return _organizationGrains[id];
         }
 
-        //public async Task<IUserGrain> GetGrain(UserId id)
-        //{
-        //    if (!_userGrains.ContainsKey(id))
-        //    {
-        //        _userGrains.Add(id, await this.Silo.CreateGrainAsync<UserGrain>(id.Value));
-        //    }
-        //    return _userGrains[id];
-        //}
+        public async Task<IUserGrain> GetGrain(UserId id)
+        {
+            if (!_userGrains.ContainsKey(id))
+            {
+                _userGrains.Add(id, await this.Silo.CreateGrainAsync<UserGrain>(id.Value));
+            }
+            return _userGrains[id];
+        }
     }
 }

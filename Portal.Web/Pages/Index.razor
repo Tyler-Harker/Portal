@@ -1,0 +1,38 @@
+﻿@page "/"
+@using Portal.Components
+@using Portal.Components.Layouts;
+@using Portal.Domain.ValueObjects.Organizations
+@using Portal.Msal
+@layout UnauthorizedLayout
+
+<PageTitle>Home</PageTitle>
+
+<button @onclick="() => SetValue()">Set Config</button>
+<div>.</div>
+<div>.</div>
+<button @onclick="() => CreateMsalObject()">Create Msal Object</button>
+<div>.</div>
+<div>.</div>
+<button @onclick="() => InitiateLogin()">Initiate Login</button>
+
+
+@code{
+    [Inject]
+    public MsalJsInterop MsalInterop{ get; set; }
+
+    [Inject]
+    public MsalService MsalService{ get; set; }
+
+    public async Task SetValue()
+    {
+        await MsalInterop.SetMsalConfig(new Authority("https://login.microsoftonline.com/a4aa9f35-9917-4518-b764-5fbbb893a6cd"), new ClientId("a99a8939-b2fd-4831-b8f2-f9db51cfbe88"));
+    }
+    public async Task CreateMsalObject()
+    {
+        await MsalInterop.CreateMsalObject();
+    }
+    public async Task InitiateLogin()
+    {
+        await MsalInterop.InitiateLogin();
+    }
+}

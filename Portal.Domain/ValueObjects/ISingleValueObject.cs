@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.ValueObjects
 {
-    public interface ISingleValueObject<TType>
+    public interface ISingleValueObject { }
+    public interface ISingleValueObject<TType> : ISingleValueObject
     {
         TType Value { get; }
     }

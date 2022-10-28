@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Des.Blazor.Authorization.Msal" Version="0.1.671" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="5.5.0" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.5.0" />
+    <PackageReference Include="Fluxor.Persist" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.10" />
+    <PackageReference Include="MudBlazor" Version="6.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portal.Web.Domain\Portal.Web.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -28,20 +28,43 @@ namespace Portal.Grains
             _logger = logger;
         }
 
-        public Task<Interfaces.Internal.IOrganizationGrain> Create(OrganizationId id, OrganizationName name)
+        public async Task<bool> Create(OrganizationId id, OrganizationName name, OrganizationShortName shortName)
         {
-            State.Apply(new CreateEvent(id, name));
-            throw new NotImplementedException();
+            if(State.Id is null)
+            {
+                State.Apply(new OrganizationCreatedEvent(id, name, shortName));
+                await WriteStateAsync();
+                return true;
+            }
+
+            return false;
         }
 
-        public async Task<IUserGrain> CreateUser(Username username, FirstName firstName, LastName lastName)
+        public async Task<IUserGrain?> CreateUser(Username username, FirstName firstName, LastName lastName)
         {
-            var newUserId = new UserId(Guid.NewGuid());
-            var userGrain = GrainFactory.GetInternalGrain(newUserId);
+            if(State.Id is not null)
+            {
+                var newUserId = new UserId(Guid.NewGuid());
+                var userGrain = GrainFactory.GetInternalGrain(newUserId);
+                if (await userGrain.Create(State.Id, newUserId, username, firstName, lastName))
+                {
+                    State.Apply(new ValidUserAddedEvent(newUserId));
+                    await WriteStateAsync();
+                    return userGrain;
+                }
+            }
             
-            await userGrain.Create(newUserId, username, firstName, lastName);
-            State.Apply(new CreateUserEvent(newUserId));
-            return userGrain;
+            return null;
+        }
+
+        public async Task DeactivateUser(UserId userId)
+        {
+            if (State.ActiveUserIds.Contains(userId))
+            {
+                await GrainFactory.GetInternalGrain(userId).Deactivate();
+                State.Apply(new UserDeactivatedEvent(userId));
+                await WriteStateAsync();
+            }
         }
 
         public Task<Page<IUserGrain>> GetActiveUsers(SkipTake skipTake)
@@ -80,9 +103,35 @@ namespace Portal.Grains
             return Task.FromResult(new Page<IUserGrain>(skipTake, deactivatedUsers, State.DeactivatedUserIds.Count));
         }
 
+        public Task<OrganizationMsalConfiguration?> GetMsalConfiguration()
+        {
+            return Task.FromResult(State.MsalConfiguration);
+        }
+
+        public Task<OrganizationId?> GetOrganizationId()
+        {
+            return Task.FromResult(State.Id);
+        }
+
         public Task<bool> IsUserActive(UserId userId)
         {
             return Task.FromResult(State.ActiveUserIds.Contains(userId));
+        }
+
+        public async Task ReactivateUser(UserId userId)
+        {
+            if (State.DeactivatedUserIds.Contains(userId))
+            {
+                await GrainFactory.GetInternalGrain(userId).Reactivate();
+                State.Apply(new UserReactivatedEvent(userId));
+                await WriteStateAsync();
+            }
+        }
+
+        public Task SetMsalConfiguration(OrganizationMsalConfiguration msalConfiguration)
+        {
+            State.Apply(new OrganizationMsalConfigurationSetEvent(msalConfiguration.Authority, msalConfiguration.Id, msalConfiguration.Secret));
+            return Task.FromResult(WriteStateAsync());
         }
     }
 }

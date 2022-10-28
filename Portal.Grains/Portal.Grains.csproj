@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -18,10 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Portal.Common\Portal.Common.csproj" />
-    <ProjectReference Include="..\Portal.GrainInterfaces\Portal.GrainInterfaces.csproj" />
     <ProjectReference Include="..\Portal.Grains.Interfaces.Internal\Portal.Grains.Interfaces.Internal.csproj" />
     <ProjectReference Include="..\Portal.Grains.Interfaces.Public\Portal.Grains.Interfaces.Public.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Orleans_CodeGenInputs Remove="OrganizationsGrain.cs" />
   </ItemGroup>
 
 </Project>

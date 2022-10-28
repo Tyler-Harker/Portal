@@ -1,0 +1,16 @@
+﻿@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider />
+
+<MudLayout Style="height: 100vh;">
+    <MudAppBar Elevation="1" Color="Color.Dark">
+        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Info">Sign In</MudButton>
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudMainContent Style="height: 100%;">
+        @Body
+    </MudMainContent>
+</MudLayout>

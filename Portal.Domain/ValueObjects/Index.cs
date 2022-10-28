@@ -15,6 +15,7 @@ namespace Portal.Domain.ValueObjects
     public record UpdatedByImpersonatorId(UserId Value) : ISingleValueObject<UserId> { }
     public record CreatedAt(UtcDateTime Value) : ISingleValueObject<UtcDateTime> { }
     public record UpdatedAt(UtcDateTime Value) : ISingleValueObject<UtcDateTime> { }
+    public record IsActive(bool Value) : ISingleValueObject<bool> { }
     public record Email(string Value) : ISingleValueObject<string> { }
     public record SkipTake(int Skip = 0, int Take = 10) { }
     public record Page<TResult>(SkipTake SkipTake, ReadOnlyCollection<TResult> Results, int TotalRecords) { }

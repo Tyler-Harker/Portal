@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Orleans.Configuration;
+using Orleans;
 using Portal.IdentityServer.Security;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,13 +12,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddIdentityServer()
     .AddClientStore<OrganizationClientStore>()
     .AddResourceStore<ResourceStore>()
     .AddDeveloperSigningCredential()
     .AddResourceOwnerValidator<UserValidator>()
     .AddProfileService<UserProfileService>()
+    .AddExtensionGrantValidator<AzureAdGrantValidator>()
     .AddJwtBearerClientAuthentication();
+
+builder.Services.AddSingleton(new Lazy<IClusterClient>(() =>
+{
+    var client = new ClientBuilder()
+    .UseLocalhostClustering()
+    .Configure<ClusterOptions>(options =>
+    {
+        options.ClusterId = "dev";
+        options.ServiceId = "portal";
+    })
+    .ConfigureLogging(logging => logging.AddConsole())
+    .Build();
+    client.Connect(eh => Task.FromResult(true)).Wait();
+    return client;
+}));
 
 var app = builder.Build();
 
@@ -27,6 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 

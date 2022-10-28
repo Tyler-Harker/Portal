@@ -1,0 +1,22 @@
+﻿@using Fluxor
+@using Fluxor.Blazor.Web.Components;
+@using MudBlazor
+@using Portal.Components.Layouts
+@inherits FluxorComponent
+@layout UnauthorizedLayout
+@page "/organization";
+
+<MudBlazor.MudContainer MaxWidth="MudBlazor.MaxWidth.Small" Class="d-flex flex-column justify-content-center" Style="height: 100%;">
+    <MudBlazor.MudPaper Style="position:relative;">
+        <MudBlazor.MudOverlay Visible="IsOverlayVisible" DarkBackground="true" Absolute="true">
+            <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+        </MudBlazor.MudOverlay>
+        <MudBlazor.MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <div class="d-flex align-center justify-space-between p-4">
+                <MudBlazor.MudTextField T="string" Label="Organization" Required="true" RequiredError="Organization Required" @bind-Value="OrganizationShortName"></MudBlazor.MudTextField>
+                <MudBlazor.MudButton OnClick="OnSubmit" Variant="MudBlazor.Variant.Filled" Color="MudBlazor.Color.Primary" Class="m-2">Sign In</MudBlazor.MudButton>
+            </div>
+        </MudBlazor.MudForm>
+    </MudBlazor.MudPaper>
+    
+</MudBlazor.MudContainer>

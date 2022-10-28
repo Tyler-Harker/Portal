@@ -11,7 +11,7 @@ namespace Portal.IdentityServer.Security
             {
                 ClientId = "admin",
                 ClientSecrets = { new Secret("secret".Sha256())},
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                AllowedGrantTypes = { AzureAdGrantValidator.Type },
                 AllowedScopes = {"api", "openid"},
                 AccessTokenType = AccessTokenType.Reference,
             }

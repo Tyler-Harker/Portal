@@ -1,0 +1,31 @@
+﻿@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider/>
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
+        </MudDrawerHeader>
+        <MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+            <MudNavMenu Class="mud-width-full">
+                <MudDivider Class="my-2" />
+                <MudNavLink Href="/dashboard" Icon="fas fa-chart-line">Dashboard</MudNavLink>
+                <MudNavLink Href="/servers" Icon="fas fa-server">Servers</MudNavLink>
+                <MudNavLink Href="/billing" Icon="fas fa-receipt" Disabled="true">Billing</MudNavLink>
+                <MudNavGroup Title="Settings" Icon="fas fa-cogs" Expanded="true">
+                    <MudNavLink Href="/users" Icon="fas fa-users" IconColor="Color.Success">Users</MudNavLink>
+                    <MudNavLink Href="/security" Icon="fas fa-user-shield" IconColor="Color.Info">Security</MudNavLink>
+                </MudNavGroup>
+            </MudNavMenu>
+        </MudPaper>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="5.5.0" />
+    <PackageReference Include="Fluxor.Persist" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Portal.Domain\Portal.Domain.csproj" />
+    <ProjectReference Include="..\Portal.Msal\Portal.Msal.csproj" />
+  </ItemGroup>
+
+</Project>

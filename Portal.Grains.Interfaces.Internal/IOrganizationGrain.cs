@@ -11,6 +11,6 @@ namespace Portal.Grains.Interfaces.Internal
 {
     public interface IOrganizationGrain : Public.IOrganizationGrain
     {
-        Task<IOrganizationGrain> Create(OrganizationId id, OrganizationName name);
+        Task<bool> Create(OrganizationId id, OrganizationName name, OrganizationShortName shortName);
     }
 }
