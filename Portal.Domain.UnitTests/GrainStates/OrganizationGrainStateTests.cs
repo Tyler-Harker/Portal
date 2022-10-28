@@ -201,7 +201,7 @@ namespace Portal.Domain.UnitTests.GrainStates
             var organizationName = new OrganizationName("admin corp");
             var organizationShortName = new OrganizationShortName("admin");
             state.Apply(new OrganizationCreatedEvent(organizationId, organizationName, organizationShortName));
-            var newDomain = new ValueObjects.CustomDomains.Domain("test.com");
+            var newDomain = new Domain.ValueObjects.CustomDomains.Domain("test.com");
 
             //test
             state.Apply(new CustomDomainAddedEvent(newDomain));
@@ -217,7 +217,7 @@ namespace Portal.Domain.UnitTests.GrainStates
             var organizationName = new OrganizationName("admin corp");
             var organizationShortName = new OrganizationShortName("admin");
             state.Apply(new OrganizationCreatedEvent(organizationId, organizationName, organizationShortName));
-            var newDomain = new ValueObjects.CustomDomains.Domain("test.com");
+            var newDomain = new Domain.ValueObjects.CustomDomains.Domain("test.com");
             state.Apply(new CustomDomainAddedEvent(newDomain));
 
             //test

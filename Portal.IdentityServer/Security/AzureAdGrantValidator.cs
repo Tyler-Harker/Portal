@@ -4,6 +4,9 @@ using Orleans;
 using Portal.Domain.ValueObjects.Organizations;
 using System.IdentityModel.Tokens.Jwt;
 using Portal.Grains.Interfaces.Public.Extensions;
+using Newtonsoft.Json.Linq;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols;
 
 namespace Portal.IdentityServer.Security
 {
@@ -32,16 +35,37 @@ namespace Portal.IdentityServer.Security
                 var test = jwtHandler.ReadJwtToken(userToken);
                 SecurityToken token;
 
+                var organizationsGrain = _clusterClient.Value.GetGrain(new OrganizationsId());
+                var organizationGrain = await organizationsGrain.GetOrganization(new OrganizationId(Guid.Parse(organizationId)));
 
-                var result = jwtHandler.ValidateToken(userToken, new TokenValidationParameters
+                
+
+                if(organizationGrain is not null)
                 {
-                    ValidateIssuerSigningKey = true,
-                    //IssuerSigningKey = new SymmetricSecurityKey(""),
-                    ValidateIssuer = true,
-                    ValidIssuers = new string[] { /* Audeience + /v2.0 */ },
-                    ValidateAudience = true,
-                    ValidAudiences = new string[] { /* ClientId */ },
-                }, out token);
+                    var msalConfiguration = await organizationGrain.GetMsalConfiguration();
+
+                    if(msalConfiguration is not null)
+                    {
+                        var configUrl = $"{msalConfiguration.Authority.Value}/v2.0/.well-known/openid-configuration";
+                        ConfigurationManager<OpenIdConnectConfiguration> configManager = new ConfigurationManager<OpenIdConnectConfiguration>(configUrl, new OpenIdConnectConfigurationRetriever(), _httpClient);
+                        
+                        var openIdConfig = await configManager.GetConfigurationAsync();
+                        if(openIdConfig is not null)
+                        {
+                            var result = jwtHandler.ValidateToken(userToken, new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKeys = openIdConfig.SigningKeys,
+                                ValidateIssuer = true,
+                                ValidIssuers = new string[] { $"{msalConfiguration.Authority.Value}/v2.0" },
+                                ValidateAudience = true,
+                                ValidAudiences = new string[] { $"{msalConfiguration.Id.Value}" },
+                            }, out token);
+
+                            context.Result = new GrantValidationResult();
+                        }
+                    }
+                }
             }
         }
 
@@ -54,5 +78,22 @@ namespace Portal.IdentityServer.Security
             }
             return null;
         }
+
+
+        internal class KeysResponse
+        {
+            public List<Key> Keys { get; set; }
+        }
+
+        internal class Key
+        {
+
+        }
+
+
+
+
+
+
     }
 }

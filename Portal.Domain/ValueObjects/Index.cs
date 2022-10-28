@@ -19,4 +19,5 @@ namespace Portal.Domain.ValueObjects
     public record Email(string Value) : ISingleValueObject<string> { }
     public record SkipTake(int Skip = 0, int Take = 10) { }
     public record Page<TResult>(SkipTake SkipTake, ReadOnlyCollection<TResult> Results, int TotalRecords) { }
+    public record AccessToken(string Value) : ISingleValueObject<string> { }
 }

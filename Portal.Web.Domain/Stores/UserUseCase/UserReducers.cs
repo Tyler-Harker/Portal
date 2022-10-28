@@ -11,5 +11,7 @@ namespace Portal.Web.Domain.Stores.UserUseCase
     {
         [ReducerMethod]
         public static UserState ReduceSetUserOrganizationId(UserState state, SetUserOrganizationId action) => state with { OrganizationId = action.OrganizationId };
+        [ReducerMethod]
+        public static UserState ReduceSetUserAccessToken(UserState state, SetUserAccessToken action) => state with { AccessToken = action.AccessToken };
     }
 }

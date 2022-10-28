@@ -1,6 +1,7 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
 using Portal.Domain.HttpClients;
+using Portal.Domain.ValueObjects;
 using Portal.Msal;
 using Portal.Web.Domain.Stores.UserUseCase;
 using System;
@@ -17,12 +18,14 @@ namespace Portal.Web.Domain.Stores.OrganizationMsalCase.Effects
         private readonly IState<UserState> _userState;
         private readonly WebApiHttpClient _httpClient;
         private readonly MsalService _msalService;
-        public LoadOrganizationMsalConfigurationEffect(NavigationManager navigationManager, IState<UserState> userState, WebApiHttpClient httpClient, MsalService msalService)
+        private readonly IdentityServerHttpClient _identityServerClient;
+        public LoadOrganizationMsalConfigurationEffect(NavigationManager navigationManager, IState<UserState> userState, WebApiHttpClient httpClient, MsalService msalService, IdentityServerHttpClient identityServerClient)
         {
             _navigationManager = navigationManager;
             _userState = userState;
             _httpClient = httpClient;
             _msalService = msalService;
+            _identityServerClient = identityServerClient;
         }
         public async override Task HandleAsync(LoadOrganizationMsalConfiguration action, IDispatcher dispatcher)
         {
@@ -53,6 +56,17 @@ namespace Portal.Web.Domain.Stores.OrganizationMsalCase.Effects
                 }
                 else
                 {
+                    var tokenResult = await _identityServerClient.AzureAdGrantValidator(_userState.Value.OrganizationId, msalToken);
+                    if(tokenResult is not null && tokenResult.AccessToken is not null)
+                    {
+                        dispatcher.Dispatch(new SetUserAccessToken(new AccessToken(tokenResult.AccessToken)));
+                        _navigationManager.NavigateTo("/dashboard");
+                    }
+                    else
+                    {
+                        _navigationManager.NavigateTo("/organization");
+                        //todo handle when identtiyserver cant generate token.
+                    }
                 }
 
             }

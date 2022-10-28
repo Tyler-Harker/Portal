@@ -26,6 +26,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<MsalJsInterop>();
 builder.Services.AddScoped<MsalService>();
 builder.Services.AddHttpClient<WebApiHttpClient>(x => x.BaseAddress = new Uri("https://localhost:7107/"));
+builder.Services.AddHttpClient<IdentityServerHttpClient>();
 builder.Services.AddFluxor(fluxorOptions => {
     fluxorOptions.ScanAssemblies(typeof(App).Assembly, typeof(UserState).Assembly, typeof(RoutingState).Assembly);
     fluxorOptions.UsePersist(persistOptions => {
