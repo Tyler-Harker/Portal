@@ -13,7 +13,7 @@ namespace Portal.IdentityServer.Security
                 ClientSecrets = { new Secret("secret".Sha256())},
                 AllowedGrantTypes = { AzureAdGrantValidator.Type },
                 AllowedScopes = {"api", "openid"},
-                AccessTokenType = AccessTokenType.Reference,
+                AccessTokenType = AccessTokenType.Jwt,
             }
         };
         public Task<Client> FindClientByIdAsync(string clientId)

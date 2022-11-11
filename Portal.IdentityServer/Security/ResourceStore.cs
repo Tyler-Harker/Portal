@@ -7,8 +7,11 @@ namespace Portal.IdentityServer.Security
     {
         private List<ApiResource> ApiResources = new List<ApiResource>
         {
-            new ApiResource("api", "Api")
+            new ApiResource
             {
+                Name = "WebApi",
+                DisplayName = "WebApi",
+                Description = "Allow the application to access WebApi on your behalf",
                 Scopes =
                 {
                     "api", "openid"

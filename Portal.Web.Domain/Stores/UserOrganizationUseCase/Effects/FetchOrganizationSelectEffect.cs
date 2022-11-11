@@ -1,16 +1,8 @@
 ﻿using Fluxor;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Portal.Domain.Extensions;
-using Portal.Domain.HttpClients;
+using Portal.Web.Domain.HttpClients;
 using Portal.Web.Domain.Stores.UserUseCase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Portal.Web.Domain.Stores.UserOrganizationUseCase.Effects
 {
@@ -19,11 +11,13 @@ namespace Portal.Web.Domain.Stores.UserOrganizationUseCase.Effects
         private readonly ILogger<LoadUserOrganizationEffect> _logger;
         private readonly WebApiHttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
-        public LoadUserOrganizationEffect(ILogger<LoadUserOrganizationEffect> logger, WebApiHttpClient httpClient, NavigationManager navigationManager)
+        private readonly AppSettings _appSettings;
+        public LoadUserOrganizationEffect(ILogger<LoadUserOrganizationEffect> logger, WebApiHttpClient httpClient, NavigationManager navigationManager, AppSettings appSettings)
         {
             _logger = logger;
             _httpClient = httpClient;
             _navigationManager = navigationManager;
+            _appSettings = appSettings;
         }
 
         public override async Task HandleAsync(LoadUserOrganization action, IDispatcher dispatcher)
@@ -41,8 +35,11 @@ namespace Portal.Web.Domain.Stores.UserOrganizationUseCase.Effects
                 {
                     dispatcher.Dispatch(new LoadUserOrganizationSuceeded(result.OrganizationId, result.Domain));
                     dispatcher.Dispatch(new SetUserOrganizationId(result.OrganizationId));
-                    _navigationManager.NavigateTo($"https://{result.Domain.Value}{_navigationManager.GetPortString()}/organizationMsal");
+                    dispatcher.Dispatch(new SetUserOrganizationDomain(result.Domain));
+                    dispatcher.Dispatch(new SetUserOrganizationShortName(result.ShortName));
+                    _navigationManager.NavigateTo($"/organizationMsal");
                 }
+
             }
             catch(Exception ex)
             {

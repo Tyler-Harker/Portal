@@ -1,3 +1,4 @@
+global using Portal.Grains.Interfaces.Public.Extensions;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Orleans;
@@ -8,6 +9,16 @@ using MediatR;
 using Portal.Domain.Extensions;
 using Portal.Domain.Requests.Organizations;
 using Portal.WebApi.RequestHandlers;
+using Orleans.Hosting;
+using Portal.WebApi;
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+    .AddEnvironmentVariables()
+    .Build()
+    .Get<WebApiConfiguration>();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +38,11 @@ builder.Services.AddMediatR(x => x.AsScoped(), typeof(GetOrganizationDomainInfor
 builder.Services.AddSingleton(new Lazy<IClusterClient>(() =>
 {
     var client = new ClientBuilder()
-    .UseLocalhostClustering()
+    .UseAzureStorageClustering(options =>
+    {
+        options.ConfigureTableServiceClient(configuration.ConnectionStrings.AzureStorage);
+    })
+    //.UseLocalhostClustering()
     .Configure<ClusterOptions>(options =>
     {
         options.ClusterId = "dev";
@@ -38,6 +53,12 @@ builder.Services.AddSingleton(new Lazy<IClusterClient>(() =>
     client.Connect(eh => Task.FromResult(true)).Wait();
     return client;
 }));
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Audience = "WebApi";
+        options.Authority = "https://localhost:7244";
+    });
 
 
 
@@ -50,9 +71,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

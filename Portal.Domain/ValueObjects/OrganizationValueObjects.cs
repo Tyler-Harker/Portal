@@ -13,6 +13,6 @@ namespace Portal.Domain.ValueObjects.Organizations
     public record ClientId(string Value) : ISingleValueObject<string> { }
     public record ClientSecret(string Value) : ISingleValueObject<string>{}
     public record OrganizationMsalConfiguration(Authority Authority, ClientId Id, ClientSecret Secret);
-
+    public record OrganizationTableData(OrganizationId Id, OrganizationShortName ShortName, OrganizationName Name, IsActive IsActive);
 
 }

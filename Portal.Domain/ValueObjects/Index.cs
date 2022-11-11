@@ -18,6 +18,12 @@ namespace Portal.Domain.ValueObjects
     public record IsActive(bool Value) : ISingleValueObject<bool> { }
     public record Email(string Value) : ISingleValueObject<string> { }
     public record SkipTake(int Skip = 0, int Take = 10) { }
-    public record Page<TResult>(SkipTake SkipTake, ReadOnlyCollection<TResult> Results, int TotalRecords) { }
+    public record Page<TResult>(SkipTake SkipTake, List<TResult> Results, int TotalRecords) { }
     public record AccessToken(string Value) : ISingleValueObject<string> { }
+    public record OAuthResponse(string access_token);
+
+
+
+
+    public record NavigationItem(string DisplayText, string Path);
 }

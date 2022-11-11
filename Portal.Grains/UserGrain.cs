@@ -28,6 +28,20 @@ namespace Portal.Grains
             return Task.FromResult(() => State.Apply(new UserDeactivatedEvent()));
         }
 
+        public Task<UserTableData> GetTableData()
+        {
+            return Task.FromResult(
+                new UserTableData(
+                    State.Id,
+                    State.FirstName,
+                    State.LastName,
+                    State.Username,
+                    State.IsActive
+                )
+            );
+            throw new NotImplementedException();
+        }
+
         public Task Reactivate()
         {
             return Task.FromResult(() => State.Apply(new UserReactivatedEvent()));

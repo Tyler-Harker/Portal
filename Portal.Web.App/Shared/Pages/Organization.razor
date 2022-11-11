@@ -1,0 +1,66 @@
+﻿@page "/organization/{OrganizationIdGuid:guid}"
+@using Fluxor.Blazor.Web.Components;
+@using MudBlazor
+@using Portal.Domain.Responses.Organizations;
+@using Portal.Domain.ValueObjects.Security;
+@using Portal.Domain.ValueObjects.Users;
+@using Portal.Web.App.Shared.Stores.OrganizationFormUseCase;
+@using Portal.Web.App.Shared.Stores.OrganizationRolesTableUseCase;
+@using Portal.Web.App.Shared.Stores.OrganizationUsersTableUseCase;
+@inherits FluxorComponent
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudCard Style="padding: 16px;">
+            <h3 style="padding-bottom: 12px;">Organization Information</h3>
+            <Portal.Web.App.Shared.Components.FluxorAwareForm TData="GetOrganizationByIdResponse" TState="OrganizationFormState" OnStateChange="OnStateChange">
+                <FormContent>
+                    <MudBlazor.MudGrid>
+                        <MudBlazor.MudItem xs="12" sm="6" md="4">
+                            <MudBlazor.MudTextField T="string" Label="Name" Required="true" @bind-Value="Name"/>
+                        </MudBlazor.MudItem>
+                        <MudBlazor.MudItem xs="12" sm="6" md="4">
+                            <MudBlazor.MudTextField T="string" Label="Short Name" Required="true" @bind-Value="ShortName"/>
+                        </MudBlazor.MudItem>
+                    </MudBlazor.MudGrid>
+                </FormContent>
+            </Portal.Web.App.Shared.Components.FluxorAwareForm>
+        </MudCard>
+        
+    </MudItem>
+    <MudItem xs="12">
+        <MudCard>
+            <h3 style="padding: 12px 16px;">Roles</h3>
+            <Portal.Web.App.Shared.Components.FluxorAwareTable TData="Role" TState="OrganizationRolesTableState">
+                <HeaderContent>
+                    <MudBlazor.MudTh>Name</MudBlazor.MudTh>
+                    <MudBlazor.MudTh></MudBlazor.MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name.Value</MudTd>
+                    <MudTd>Edit</MudTd>
+                </RowTemplate>
+            </Portal.Web.App.Shared.Components.FluxorAwareTable>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12">
+        <MudCard>
+            <h3 style="padding: 12px 16px;">Users</h3>
+            <Portal.Web.App.Shared.Components.FluxorAwareTable TData="UserTableData" TState="OrganizationUsersTableState">
+                <HeaderContent>
+                    <MudBlazor.MudTh>Username</MudBlazor.MudTh>
+                    <MudBlazor.MudTh>First Name</MudBlazor.MudTh>
+                    <MudBlazor.MudTh>Last Name</MudBlazor.MudTh>
+                    <MudBlazor.MudTh></MudBlazor.MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Username">@context.Username.Value.Value</MudTd>
+                    <MudTd DataLabel="First Name">@context.FirstName.Value</MudTd>
+                    <MudTd DataLabel="Last Name">@context.LastName.Value</MudTd>
+                    <MudTd>Edit</MudTd>
+                </RowTemplate>
+            </Portal.Web.App.Shared.Components.FluxorAwareTable>
+        </MudCard>
+    </MudItem>
+
+</MudGrid>

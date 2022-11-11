@@ -2,6 +2,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Orleans.Configuration;
 using Orleans;
 using Portal.IdentityServer.Security;
+using Portal.IdentityServer;
+using Orleans.Hosting;
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+    .AddEnvironmentVariables()
+    .Build()
+    .Get<IdentityServerConfiguration>();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +35,17 @@ builder.Services.AddIdentityServer()
 builder.Services.AddSingleton(new Lazy<IClusterClient>(() =>
 {
     var client = new ClientBuilder()
-    .UseLocalhostClustering()
+    //.UseLocalhostClustering()
+    .UseAzureStorageClustering(options =>
+    {
+        options.ConfigureTableServiceClient(configuration.ConnectionStrings.AzureStorage);
+    })
     .Configure<ClusterOptions>(options =>
     {
         options.ClusterId = "dev";
         options.ServiceId = "portal";
     })
+
     .ConfigureLogging(logging => logging.AddConsole())
     .Build();
     client.Connect(eh => Task.FromResult(true)).Wait();

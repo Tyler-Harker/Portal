@@ -11,27 +11,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Portal.Grains.Interfaces.Public.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Portal.WebApi.RequestHandlers
 {
-    public class GetOrganizationMsalConfigurationHandler : IRequestHandler<GetOrganizationMsalConfigurationRequest, IResult>
+    public class GetOrganizationMsalConfigurationHandler : IRequestHandler<GetOrganizationMsalConfigurationRequest, object>
     {
         private readonly Lazy<IClusterClient> _clusterClient;
         public GetOrganizationMsalConfigurationHandler(Lazy<IClusterClient> clusterClient)
         {
             _clusterClient = clusterClient;
         }
-        public async Task<IResult> Handle(GetOrganizationMsalConfigurationRequest request, CancellationToken cancellationToken)
+        public async Task<object> Handle(GetOrganizationMsalConfigurationRequest request, CancellationToken cancellationToken)
         {
             var organizationGrain = _clusterClient.Value.GetGrain(request.Id);
             var msalConfiguration = await organizationGrain.GetMsalConfiguration();
             if (msalConfiguration is not null)
             {
-                return Results.Ok(new GetOrganizationMsalConfigurationResponse(msalConfiguration.Authority, msalConfiguration.Id));
+                return new OkObjectResult(new GetOrganizationMsalConfigurationResponse(msalConfiguration.Authority, msalConfiguration.Id));
             }
             else
             {
-                return Results.NotFound();
+                return new NotFoundResult();
             }
         }
     }

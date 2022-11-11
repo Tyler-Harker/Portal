@@ -1,0 +1,13 @@
+﻿@using Fluxor.Blazor.Web.Components;
+@using MudBlazor;
+@typeparam TData
+@typeparam TState
+
+@inherits FluxorComponent
+<MudForm Model="model" @ref="form">
+    @if (IsLoading)
+    {
+        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+    }
+    @FormContent
+</MudForm>

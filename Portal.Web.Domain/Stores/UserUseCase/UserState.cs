@@ -10,5 +10,5 @@ using System.Threading.Tasks;
 
 namespace Portal.Web.Domain.Stores.UserUseCase
 {
-    public record UserState(Username? Username = null, OrganizationId? OrganizationId = null, AccessToken? AccessToken = null);
+    public record UserState(Username? Username = null, OrganizationId? OrganizationId = null, AccessToken? AccessToken = null, Portal.Domain.ValueObjects.CustomDomains.Domain? Domain = null, OrganizationShortName? OrganizationShortName = null);
 }

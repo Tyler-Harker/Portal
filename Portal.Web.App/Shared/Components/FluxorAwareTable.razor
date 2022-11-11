@@ -1,0 +1,20 @@
+﻿@using Fluxor.Blazor.Web.Components;
+@using MudBlazor
+@typeparam TData
+@typeparam TState
+@inherits FluxorComponent
+<MudBlazor.MudTable itemref="table" Items="tableData" Loading="IsLoading">
+    <HeaderContent>
+        @HeaderContent
+    </HeaderContent>
+    <RowTemplate>
+        @RowTemplate(context)
+    </RowTemplate>
+    <NoRecordsContent>No matching Organizations found.</NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager></MudTablePager>
+    </PagerContent>
+</MudBlazor.MudTable>

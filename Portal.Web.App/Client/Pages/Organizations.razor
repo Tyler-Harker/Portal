@@ -1,0 +1,50 @@
+﻿@page "/organizations"
+@using MudBlazor;
+@using Orleans;
+@using Portal.Domain.ValueObjects.Organizations;
+@using Portal.Domain.ValueObjects;
+@using Portal.Web.Domain.HttpClients;
+
+<MudBlazor.MudTable Dense="true" Hover="true" itemref="table" ServerData="@(new Func<TableState, Task<TableData<OrganizationTableData>>>(ServerReload))">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Short Name</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Is Active</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id.Value</MudTd>
+        <MudTd DataLabel="Short Name">@context.ShortName.Value</MudTd>
+        <MudTd DataLabel="Name">@context.Name.Value</MudTd>
+        <MudTd DataLabel="Is Active">@context.IsActive.Value</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>No matching Organizations found.</NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager></MudTablePager>
+    </PagerContent>
+</MudBlazor.MudTable>
+
+
+
+@code {
+    [Inject]
+    public WebApiHttpClient WebApiClient { get; set; }
+
+    private MudTable<OrganizationTableData> table;
+    private IEnumerable<OrganizationTableData> pagedData;
+
+    private int totalItems;
+    private string searchString = null;
+    private async Task<TableData<OrganizationTableData>> ServerReload(TableState state)
+    {
+        var page = await WebApiClient.GetActiveOrganizations(new SkipTake());
+        return new TableData<OrganizationTableData>()
+            {
+                TotalItems = page.TotalRecords,
+                Items = page.Results
+            };
+    }
+}

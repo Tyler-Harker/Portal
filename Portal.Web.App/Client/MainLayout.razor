@@ -1,0 +1,18 @@
+﻿@using MudBlazor
+@inherits LayoutComponentBase
+
+<MudThemeProvider/>
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"/>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
+    </MudAppBar>
+    <Portal.Components.Components.SideBar></Portal.Components.Components.SideBar>
+    
+    <MudMainContent>
+        <div style="padding: 16px;">
+            @Body
+        </div>
+    </MudMainContent>
+</MudLayout>

@@ -9,7 +9,10 @@ using Portal.Domain.ValueObjects;
 using Portal.Domain.ValueObjects.Organizations;
 using Portal.Domain.ValueObjects.Users;
 using Portal.Domain.ValueObjects.CustomDomains;
-
+using Portal.Domain.GrainStates;
+using Portal.Domain.Responses.Organizations;
+using Portal.Domain.ValueObjects.Security;
+using Portal.Domain.ValueObjects.Modules;
 
 namespace Portal.Grains.Interfaces.Public
 {
@@ -23,8 +26,14 @@ namespace Portal.Grains.Interfaces.Public
         Task<OrganizationMsalConfiguration?> GetMsalConfiguration();
         Task SetMsalConfiguration(OrganizationMsalConfiguration msalConfiguration);
 
-        Task<Page<IUserGrain>> GetActiveUsers(SkipTake skipTake);
-        Task<Page<IUserGrain>> GetDeactivatedUsers(SkipTake skipTake);
+        Task<Page<IUserGrain>?> GetActiveUsers(SkipTake skipTake);
+        Task<Page<IUserGrain>?> GetDeactivatedUsers(SkipTake skipTake);
         Task<Page<ICustomDomainGrain>> GetCustomDomains(SkipTake skipTake);
+        Task<OrganizationTableData> GetTableData();
+        Task<GetOrganizationByIdResponse> GetByIdRequest();
+        Task<Page<Role>?> GetRoles(SkipTake skipTake);
+        Task CreateRole(RoleName Name, HashSet<Privilege> Privileges);
+        Task<bool> AddModule(ModuleName ModuleName);
+        Task<bool> RemoveModule(ModuleName ModuleName);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Orleans;
+using Portal.Domain.ValueObjects;
 using Portal.Domain.ValueObjects.Organizations;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace Portal.Grains.Interfaces.Public
         Task<IOrganizationGrain> CreateOrganization(OrganizationShortName shortName, OrganizationName name);
         Task<IOrganizationGrain?> GetOrganization(OrganizationShortName shortName);
         Task<IOrganizationGrain?> GetOrganization(OrganizationId id);
+        Task<Page<IOrganizationGrain>> GetActiveOrganizations(SkipTake skipTake);
     }
 }

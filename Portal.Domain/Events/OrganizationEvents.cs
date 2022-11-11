@@ -1,5 +1,8 @@
-﻿using Portal.Domain.ValueObjects;
+﻿using Portal.Domain.Enums;
+using Portal.Domain.ValueObjects;
+using Portal.Domain.ValueObjects.Modules;
 using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Security;
 using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -21,4 +24,8 @@ namespace Portal.Domain.Events.Organizations
     public record OrganizationActivatedEvent() : BaseEvent, IOrganizationEvent;
     public record OrganizationDeactivatedEvent() : BaseEvent, IOrganizationEvent;
     public record OrganizationMsalConfigurationSetEvent(Authority Authority, ClientId ClientId, ClientSecret ClientSecret) : BaseEvent, IOrganizationEvent { }
+    public record OrganizationTypeSetEvent(OrganizationType Type) : BaseEvent, IOrganizationEvent;
+    public record OrganizationModuleAdded(ModuleName ModuleName) : BaseEvent, IOrganizationEvent;
+    public record OrganizationModuleRemoved(ModuleName ModuleName) : BaseEvent, IOrganizationEvent;
+    public record RoleCreatedEvent(Role Role) : BaseEvent, IOrganizationEvent;
 }

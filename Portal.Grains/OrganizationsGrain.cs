@@ -48,5 +48,15 @@ namespace Portal.Grains
             }
             return Task.FromResult((IOrganizationGrain?)null);
         }
+
+        public Task<Page<IOrganizationGrain>> GetActiveOrganizations(SkipTake skipTake)
+        {
+            var organizationGrains = State.ActiveOrganizationIds
+                .Skip(skipTake.Skip)
+                .Take(skipTake.Take)
+                .Select(x => GrainFactory.GetGrain(x))
+                .ToList();
+            return Task.FromResult(new Page<IOrganizationGrain>(skipTake, organizationGrains, State.ActiveOrganizationIds.Count)) ;
+        }
     }
 }

@@ -15,7 +15,7 @@ using Portal.Grains.Interfaces.Public.Extensions;
 
 namespace Portal.WebApi.RequestHandlers
 {
-    public class GetOrganizationDomainInformationHandler : IRequestHandler<GetOrganizationDomainInformationRequest, IResult>
+    public class GetOrganizationDomainInformationHandler : IRequestHandler<GetOrganizationDomainInformationRequest, object>
     {
         private readonly Lazy<IClusterClient> _clusterClient;
         public GetOrganizationDomainInformationHandler(Lazy<IClusterClient> clusterClient)
@@ -23,12 +23,14 @@ namespace Portal.WebApi.RequestHandlers
             _clusterClient = clusterClient;
         }
 
-        public async Task<IResult> Handle(GetOrganizationDomainInformationRequest request, CancellationToken cancellationToken)
+        public async Task<object> Handle(GetOrganizationDomainInformationRequest request, CancellationToken cancellationToken)
         {
             var organizationsGrain = _clusterClient.Value.GetGrain(new OrganizationsId());
             var organizationGrain = await organizationsGrain.GetOrganization(request.ShortName);
             var organizationId = await organizationGrain.GetOrganizationId();
-            return Results.Ok(new GetOrganizationDomainInformationResponse(organizationId, new Portal.Domain.ValueObjects.CustomDomains.Domain("admin.localhost")));
+            return new OkObjectResult(new GetOrganizationDomainInformationResponse(organizationId, null, request.ShortName));
         }
     }
+
+    
 }

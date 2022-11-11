@@ -12,15 +12,24 @@ using Portal.Grains.Interfaces.Internal.Extensions;
 using Portal.Silo.Migrations;
 using Portal.Domain.ValueObjects;
 using Portal.Domain.NewtonsoftJsonConverters;
+using Microsoft.Extensions.Configuration;
+using Portal.Silo;
 
 internal class Program
 {
     private static async Task<int> Main(string[] args)
     {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+            .AddEnvironmentVariables()
+            .Build()
+            .Get<SiloConfiguration>();
         try
         {
-            var host = await StartSiloAsync();
-            await RunMigrationAsync();
+            var host = await StartSiloAsync(configuration);
+            await RunMigrationAsync(configuration);
             Console.WriteLine("\n\n Press Enter to terminate... \n\n");
             Console.ReadLine();
             await host.StopAsync();
@@ -32,7 +41,7 @@ internal class Program
             return 1;
         }
 
-        static async Task<IHost> StartSiloAsync()
+        static async Task<IHost> StartSiloAsync(SiloConfiguration configuration)
         {
             var builder = new HostBuilder()
                 .UseOrleans(c =>
@@ -45,10 +54,14 @@ internal class Program
                             jsonOptions.Converters.Add(new CustomDictionaryConverter());
                         };
                         options.UseJson = true;
-                        options.ConfigureBlobServiceClient("AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;");
-                    });
-
-                    c.UseLocalhostClustering()
+                        options.ConfigureBlobServiceClient(configuration.ConnectionStrings.AzureStorage);
+                    })
+                    //.UseLocalhostClustering()
+                    .UseAzureStorageClustering(options =>
+                    {
+                        options.ConfigureTableServiceClient(configuration.ConnectionStrings.AzureStorage);
+                    })
+                    .ConfigureEndpoints(siloPort: configuration.SiloPort, gatewayPort: configuration.GatewayPort)
                     .Configure<ClusterOptions>(options =>
                     {
                         options.ClusterId = "dev";
@@ -69,10 +82,14 @@ internal class Program
             return host;
         }
 
-        static async Task RunMigrationAsync()
+        static async Task RunMigrationAsync(SiloConfiguration configuration)
         {
             var client = new ClientBuilder()
-                .UseLocalhostClustering()
+                //.UseLocalhostClustering()
+                .UseAzureStorageClustering(options =>
+                {
+                    options.ConfigureTableServiceClient(configuration.ConnectionStrings.AzureStorage);
+                })
                 .Configure<ClusterOptions>(options =>
                 {
                     options.ClusterId = "dev";

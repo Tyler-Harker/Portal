@@ -1,7 +1,10 @@
-﻿using Portal.Domain.Events.Organizations;
+﻿using Portal.Domain.Enums;
+using Portal.Domain.Events.Organizations;
 using Portal.Domain.Exceptions.Organizations;
 using Portal.Domain.ValueObjects;
+using Portal.Domain.ValueObjects.Modules;
 using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Security;
 using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -22,6 +25,10 @@ namespace Portal.Domain.GrainStates
         public HashSet<ValueObjects.CustomDomains.Domain> CustomDomains { get; set; } = new HashSet<ValueObjects.CustomDomains.Domain>();
         public IsActive IsActive { get; set; } = new IsActive(false);
         public OrganizationMsalConfiguration? MsalConfiguration { get; set; }
+        public Dictionary<RoleName, Role> Roles { get; set; } = new Dictionary<RoleName, Role>();
+        public OrganizationType Type { get; set; } = OrganizationType.Trial;
+        public HashSet<ModuleName> Modules { get; set; } = new HashSet<ModuleName> { };
+
 
         /// <summary>
         /// Initializes the organization grain state
@@ -124,6 +131,26 @@ namespace Portal.Domain.GrainStates
         public void Apply(OrganizationMsalConfigurationSetEvent @event) => Apply(@event, () =>
         {
             MsalConfiguration = new OrganizationMsalConfiguration(@event.Authority, @event.ClientId, @event.ClientSecret);
+        });
+
+        public void Apply(RoleCreatedEvent @event) => Apply(@event, () =>
+        {
+            Roles.Add(@event.Role.Name, @event.Role);
+        });
+
+        public void Apply(OrganizationTypeSetEvent @event) => Apply(@event, () =>
+        {
+            Type = @event.Type;
+        });
+
+        public void Apply(OrganizationModuleAdded @event) => Apply(@event, () =>
+        {
+            Modules.Add(@event.ModuleName);
+        });
+
+        public void Apply(OrganizationModuleRemoved @event) => Apply(@event, () =>
+        {
+            Modules.Remove(@event.ModuleName);
         });
     }
 }

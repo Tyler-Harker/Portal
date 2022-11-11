@@ -17,6 +17,9 @@ using Portal.Grains.Interfaces.Internal.Extensions;
 using Portal.Grains.Interfaces.Public.Extensions;
 using Portal.Domain.ValueObjects.Organizations;
 using Portal.Domain.Events.Organizations;
+using Portal.Domain.Responses.Organizations;
+using Portal.Domain.ValueObjects.Security;
+using Portal.Domain.ValueObjects.Modules;
 
 namespace Portal.Grains
 {
@@ -28,16 +31,41 @@ namespace Portal.Grains
             _logger = logger;
         }
 
+        public async Task<bool> AddModule(ModuleName ModuleName)
+        {
+            if(State.Modules.Contains(ModuleName))
+            {
+                return false;
+            }
+            State.Apply(new OrganizationModuleAdded(ModuleName));
+            await WriteStateAsync();
+            return true;
+        }
+
         public async Task<bool> Create(OrganizationId id, OrganizationName name, OrganizationShortName shortName)
         {
             if(State.Id is null)
             {
                 State.Apply(new OrganizationCreatedEvent(id, name, shortName));
+
+                /* Add Default Roles */
+                await CreateRole(new RoleName("Admin"), new HashSet<Privilege> { });
+                await CreateRole(new RoleName("User"), new HashSet<Privilege> { });
                 await WriteStateAsync();
                 return true;
             }
 
             return false;
+        }
+
+        public async Task CreateRole(RoleName Name, HashSet<Privilege> Privileges)
+        {
+            if(State.Id is null)
+            {
+                return;
+            }
+            State.Apply(new RoleCreatedEvent(new Role(Name,Privileges)));
+            await WriteStateAsync();
         }
 
         public async Task<IUserGrain?> CreateUser(Username username, FirstName firstName, LastName lastName)
@@ -67,16 +95,31 @@ namespace Portal.Grains
             }
         }
 
-        public Task<Page<IUserGrain>> GetActiveUsers(SkipTake skipTake)
+        public async Task<Page<IUserGrain>?> GetActiveUsers(SkipTake skipTake)
         {
+            if(State.IsActive == new IsActive(false))
+            {
+                return null;
+            }
             var activeUsers = State.ActiveUserIds
                 .Skip(skipTake.Skip)
                 .Take(skipTake.Take)
                 .Select(x => GrainFactory.GetGrain(x))
-                .ToList()
-                .AsReadOnly();
+                .ToList();
 
-            return Task.FromResult(new Page<IUserGrain>(skipTake, activeUsers, State.ActiveUserIds.Count));
+            return new Page<IUserGrain>(skipTake, activeUsers, State.ActiveUserIds.Count);
+        }
+
+        public Task<GetOrganizationByIdResponse?> GetByIdRequest()
+        {
+            if(State.IsActive == new IsActive(true))
+            {
+                return Task.FromResult(new GetOrganizationByIdResponse(State.Id, State.Name, State.ShortName));
+            }
+            else
+            {
+                return Task.FromResult((GetOrganizationByIdResponse?)null);
+            }
         }
 
         public Task<Page<ICustomDomainGrain>> GetCustomDomains(SkipTake skipTake)
@@ -85,20 +128,18 @@ namespace Portal.Grains
                 .Skip(skipTake.Skip)
                 .Take(skipTake.Take)
                 .Select(x => GrainFactory.GetGrain(x))
-                .ToList()
-                .AsReadOnly();
+                .ToList();
 
             return Task.FromResult(new Page<ICustomDomainGrain>(skipTake, domains, State.CustomDomains.Count));
         }
 
-        public Task<Page<IUserGrain>> GetDeactivatedUsers(SkipTake skipTake)
+        public Task<Page<IUserGrain>?> GetDeactivatedUsers(SkipTake skipTake)
         {
             var deactivatedUsers = State.ActiveUserIds
                 .Skip(skipTake.Skip)
                 .Take(skipTake.Take)
                 .Select(x => GrainFactory.GetGrain(x))
-                .ToList()
-                .AsReadOnly();
+                .ToList();
 
             return Task.FromResult(new Page<IUserGrain>(skipTake, deactivatedUsers, State.DeactivatedUserIds.Count));
         }
@@ -111,6 +152,27 @@ namespace Portal.Grains
         public Task<OrganizationId?> GetOrganizationId()
         {
             return Task.FromResult(State.Id);
+        }
+
+        public async Task<Page<Role>?> GetRoles(SkipTake skipTake)
+        {
+            if(State.IsActive == new IsActive(false))
+            {
+                return null;
+            }
+            return new Page<Role>(
+                skipTake, 
+                State.Roles
+                    .Skip(skipTake.Skip)
+                    .Take(skipTake.Take)
+                    .Select(x => x.Value)
+                    .ToList(),
+                State.Roles.Count);
+        }
+
+        public Task<OrganizationTableData> GetTableData()
+        {
+            return Task.FromResult(new OrganizationTableData(State.Id, State.ShortName, State.Name, State.IsActive));
         }
 
         public Task<bool> IsUserActive(UserId userId)
@@ -126,6 +188,18 @@ namespace Portal.Grains
                 State.Apply(new UserReactivatedEvent(userId));
                 await WriteStateAsync();
             }
+        }
+
+        public async Task<bool> RemoveModule(ModuleName ModuleName)
+        {
+            if (!State.Modules.Contains(ModuleName))
+            {
+                return false;
+            }
+
+            State.Apply(new OrganizationModuleRemoved(ModuleName));
+            await WriteStateAsync();
+            return true;
         }
 
         public Task SetMsalConfiguration(OrganizationMsalConfiguration msalConfiguration)

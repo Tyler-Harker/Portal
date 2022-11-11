@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Portal.Domain.Events;
 using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;

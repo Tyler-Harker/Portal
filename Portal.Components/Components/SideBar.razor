@@ -1,0 +1,18 @@
+﻿@using Fluxor.Blazor.Web.Components;
+@using MudBlazor
+@inherits FluxorComponent
+
+<MudDrawer Open="SideBarState.Value.IsOpen" Elevation="2">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
+    </MudDrawerHeader>
+    <MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+        <MudNavMenu Class="mud-width-full">
+            <MudDivider Class="my-2" />
+            @foreach(var navItem in SideBarState?.Value?.NavigationItems ?? new List<Domain.ValueObjects.NavigationItem>())
+            {
+                <MudNavLink Href="@navItem.Path">@navItem.DisplayText</MudNavLink>
+            }
+        </MudNavMenu>
+    </MudPaper>
+</MudDrawer>

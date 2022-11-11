@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using Newtonsoft.Json.Linq;
 using Portal.Domain.ValueObjects.Organizations;
+using System.Collections.Generic;
 
 namespace Portal.Domain.NewtonsoftJsonConverters
 {
@@ -47,18 +48,26 @@ namespace Portal.Domain.NewtonsoftJsonConverters
             var keyValueType =  GetValueType(keyType);
             var valueType = objectType.GenericTypeArguments[1];
             var valueValueType = GetValueType(valueType);
-            Dictionary<OrganizationShortName, OrganizationId> dictionary = new Dictionary<OrganizationShortName, OrganizationId>();
+            Dictionary<string, string> test = new Dictionary<string, string>();
             var dict = Activator.CreateInstance(objectType);
             var result = (JArray)serializer.Deserialize(reader);
             if(result.Type == JTokenType.Array)
             {
                 foreach (var item in (JArray)result)
                 {
-                    var keyToken = item.Value<JToken>("key");
-                    var valueToken = item.Value<JToken>("value");
-                    var key = Activator.CreateInstance(keyType, keyToken.Last.ToObject(keyValueType));
-                    var value = Activator.CreateInstance(valueType, valueToken.Last.ToObject(valueValueType));
-                    objectType.GetMethod("Add").Invoke(dict, new object[] { key, value });
+                    try
+                    {
+                        var keyToken = item.Value<JToken>("key");
+                        var valueToken = item.Value<JToken>("value");
+                        var key = Activator.CreateInstance(keyType, keyToken.Last.ToObject(keyValueType));
+                        var value = valueToken.ToObject(valueType);
+                        objectType.GetMethod("Add").Invoke(dict, new object[] { key, value });
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                    
                 }
                 return dict;
 

@@ -1,11 +1,14 @@
-﻿using Portal.Domain.Constants;
+﻿using Newtonsoft.Json;
+using Portal.Domain.Constants;
 using Portal.Domain.Events.Organizations;
 using Portal.Domain.Exceptions;
 using Portal.Domain.Exceptions.Organizations;
 using Portal.Domain.Extensions;
 using Portal.Domain.GrainStates;
+using Portal.Domain.NewtonsoftJsonConverters;
 using Portal.Domain.ValueObjects;
 using Portal.Domain.ValueObjects.Organizations;
+using Portal.Domain.ValueObjects.Security;
 using Portal.Domain.ValueObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -19,6 +22,33 @@ namespace Portal.Domain.UnitTests.GrainStates
     [TestFixture]
     public class OrganizationGrainStateTests : BaseStateTest
     {
+        [Test]
+        public void FromJson()
+        {
+            var state = new OrganizationGrainState();
+            state.Apply(new RoleCreatedEvent(new Domain.ValueObjects.Security.Role(new RoleName("Admin"), new HashSet<Privilege>())));
+
+
+            //var json = System.Text.Json.JsonSerializer.Serialize(state);
+            //var stateFromJson = System.Text.Json.JsonSerializer.Deserialize<OrganizationGrainState>(json);  
+
+
+            var json = JsonConvert.SerializeObject(state, new JsonSerializerSettings()
+            {
+                Converters = new List<JsonConverter> { new CustomDictionaryConverter() }
+            });
+
+            var stateFromJson = JsonConvert.DeserializeObject<OrganizationGrainState>(json, new JsonSerializerSettings()
+            {
+                Converters = new List<JsonConverter> { new CustomDictionaryConverter() }
+            });
+
+
+        }
+
+
+
+
         [Test]
         public void OrganizationCreatedEvent_SetsId()
         {

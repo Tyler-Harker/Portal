@@ -10,4 +10,6 @@ namespace Portal.Web.Domain.Stores.UserUseCase
 {
     public record SetUserOrganizationId(OrganizationId OrganizationId);
     public record SetUserAccessToken(AccessToken AccessToken);
+    public record SetUserOrganizationDomain(Portal.Domain.ValueObjects.CustomDomains.Domain Domain);
+    public record SetUserOrganizationShortName(OrganizationShortName ShortName);
 }

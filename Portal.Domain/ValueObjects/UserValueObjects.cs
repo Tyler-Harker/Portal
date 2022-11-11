@@ -10,4 +10,6 @@ namespace Portal.Domain.ValueObjects.Users
     public record FirstName(string Value) : ISingleValueObject<string> { }
     public record LastName(string Value) : ISingleValueObject<string> { }
     public record Username(Email Value) : ISingleValueObject<Email> { }
+    
+    public record UserTableData(UserId Id, FirstName FirstName, LastName LastName, Username Username, IsActive IsActive);
 }

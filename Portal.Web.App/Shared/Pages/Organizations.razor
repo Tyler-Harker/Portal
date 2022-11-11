@@ -1,0 +1,30 @@
+﻿@page "/organizations"
+@using Fluxor;
+@using Fluxor.Blazor.Web.Components;
+@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor;
+@using Orleans;
+@using Portal.Domain.ValueObjects.Organizations;
+@using Portal.Domain.ValueObjects;
+@using Portal.Web.App.Shared.Stores.OrganizationsUseCase;
+@using Portal.Web.Domain.HttpClients;
+@using Portal.Web.Domain.Stores.UserUseCase;
+@inherits FluxorComponent
+
+<h2>Organizations</h2>
+<Portal.Web.App.Shared.Components.FluxorAwareTable TData="OrganizationTableData" TState="OrganizationsState">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Short Name</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Is Active</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id.Value</MudTd>
+        <MudTd DataLabel="Short Name">@context.ShortName.Value</MudTd>
+        <MudTd DataLabel="Name">@context.Name.Value</MudTd>
+        <MudTd DataLabel="Is Active">@context.IsActive.Value</MudTd>
+        <MudTd DataLabel=""><NavLink href="@("/organization/"+context.Id.Value)">Edit</NavLink></MudTd>
+    </RowTemplate>
+</Portal.Web.App.Shared.Components.FluxorAwareTable>

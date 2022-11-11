@@ -18,7 +18,7 @@ namespace Portal.Domain.UnitTests.GrainStates
             //setup
             var state = new CustomDomainGrainState();
             var organizationId = new OrganizationId(Guid.NewGuid());
-            var domain = new ValueObjects.CustomDomains.Domain("test.com");
+            var domain = new Domain.ValueObjects.CustomDomains.Domain("test.com");
 
             //test
             state.Apply(new CustomDomainAddedEvent(organizationId, domain));
@@ -31,7 +31,7 @@ namespace Portal.Domain.UnitTests.GrainStates
             //setup
             var state = new CustomDomainGrainState();
             var organizationId = new OrganizationId(Guid.NewGuid());
-            var domain = new ValueObjects.CustomDomains.Domain("test.com");
+            var domain = new Domain.ValueObjects.CustomDomains.Domain("test.com");
 
             //test
             state.Apply(new CustomDomainAddedEvent(organizationId, domain));
@@ -44,7 +44,7 @@ namespace Portal.Domain.UnitTests.GrainStates
             //setup
             var state = new CustomDomainGrainState();
             var organizationId = new OrganizationId(Guid.NewGuid());
-            var domain = new ValueObjects.CustomDomains.Domain("test.com");
+            var domain = new Domain.ValueObjects.CustomDomains.Domain("test.com");
             state.Apply(new CustomDomainAddedEvent(organizationId, domain));
 
             //test
